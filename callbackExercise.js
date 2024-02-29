@@ -95,9 +95,9 @@ class Lamp {
 function askIfGreaterThan(el1, el2, callback) {
     // Prompt user to tell you whether el1 > el2; pass true back to the
     // callback if true; else false.
-    reader.question(`Is ${el1} greater than ${el2}?`, (answer)=>{
+    reader.question(`Is ${el1} greater than ${el2}? `, (answer)=>{
         callback(answer)
-        reader.close()
+
     })
   }
 
@@ -114,9 +114,13 @@ function askIfGreaterThan(el1, el2, callback) {
         outerBubbleSortLoop(madeAnySwaps)
     }
     if(i < arr.length - 1){
-        askIfGreaterThan(arr[i], arr[i+1], (isGreaterThan)=>{
-
-        })
+      askIfGreaterThan(arr[i], arr[i+1], (isGreaterThan)=>{
+        if (isGreaterThan === "yes") {
+          [arr[i], arr[i+1]] = [arr[i+1], arr[i]];
+          madeAnySwaps = true;
+        }
+        innerBubbleSortLoop(arr, i + 1, madeAnySwaps, outerBubbleSortLoop);
+      });
     }
   }
 
@@ -127,12 +131,19 @@ function askIfGreaterThan(el1, el2, callback) {
     function outerBubbleSortLoop(madeAnySwaps) {
       // Begin an inner loop if you made any swaps. Otherwise, call
       // `sortCompletionCallback`.
-    }
+      if (madeAnySwaps === true) {
+        innerBubbleSortLoop(arr, 0, false, outerBubbleSortLoop);
 
+      }else {
+        sortCompletionCallback(arr);
+        
+      }
+    }
     // Kick the first outer loop off, starting `madeAnySwaps` as true.
+    outerBubbleSortLoop(true)
   }
 
-//   absurdBubbleSort([3, 2, 1], function(arr) {
-//     console.log("Sorted array: " + JSON.stringify(arr));
-//     reader.close();
-//   });
+  absurdBubbleSort([3, 2, 1], function(arr) {
+    console.log("Sorted array: " + JSON.stringify(arr));
+    reader.close();
+  });
